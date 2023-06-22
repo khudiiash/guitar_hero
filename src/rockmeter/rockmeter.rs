@@ -1,5 +1,5 @@
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
-use crate::{KEYS, RADIUS, Base, Note, MissedNote};
+use crate::{KEYS, RADIUS, Base, Note, MissedNote, GameState};
 
 pub struct RockMeter;
 
@@ -31,10 +31,11 @@ impl RockMeter {
       mut meshes: ResMut<Assets<Mesh>>,
     ) {
      
-     let window = window.single();
+      let window = window.single();
       let window_width = window.width();
       let window_height = window.height();
       let radius = 99.;
+      
 
       let transform = Transform {
           translation: Vec3::new(window_width / 2.0 - radius, -window_height / 2.0 + radius, 1.),
@@ -76,8 +77,6 @@ impl RockMeter {
           transform: transform,
           ..default()
       });
-
-
    } 
    
    pub fn update_rotation(
@@ -173,10 +172,13 @@ impl Plugin for RockMeter {
     app
       .insert_resource(RockValue { value: 0., min: -100., max: 100., color: Color::rgb(1.0, 1.0, 0.0) })
       .add_startup_system(Self::setup)
-      .add_system(Self::check_input)
-      .add_system(Self::check_missed_notes)
-      .add_system(Self::update_rotation)
-      .add_system(Self::update_color);
+
+      .add_systems((
+          Self::check_input,
+          Self::check_missed_notes,
+          Self::update_rotation,
+          Self::update_color,
+      ).in_set(OnUpdate(GameState::Play)));
   }
   
 }

@@ -16,20 +16,8 @@ impl Score {
 
    pub fn setup(
       mut commands: Commands,
-      window: Query<&Window>,
       asset_server: Res<AssetServer>,
     ) {
-     // score border
-     commands.spawn(
-      SpriteBundle {
-        texture: asset_server.load("images/score_border.png"),
-        transform: Transform {
-          translation: Vec3::new(-window.single().width() / 2.0 + 100., -window.single().height() / 2. + 100., 0.0),
-          ..default()
-        },
-        ..default()
-      }
-     );
       // score text
       commands.spawn((
           TextBundle::from_section(
